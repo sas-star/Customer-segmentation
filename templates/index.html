@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Segmentation Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;       /* Indigo */
+      --primary-hover: #4338ca;
+      --secondary: #0f172a;     /* Slate dark */
+      --accent: #06b6d4;        /* Cyan */
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: rgba(226, 232, 240, 0.8);
+    }
+    body {
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%), 
+        radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.04) 0px, transparent 50%), 
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.04) 0px, transparent 50%),
+        radial-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 0);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem 1rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .nav-tabs {
+      border-bottom: none;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 9999px;
+      padding: 0.4rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      max-width: 850px;
+      margin: 0 auto;
+      border: 1px solid var(--border-color);
+    }
+    .nav-tabs .nav-item {
+      margin-bottom: 0;
+    }
+    .nav-tabs .nav-link {
+      border: none;
+      border-radius: 9999px;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      padding: 0.6rem 1.25rem;
+      transition: all 0.2s ease;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+      background-color: var(--primary) !important;
+      color: white !important;
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
+    }
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    .metric-value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: 'Outfit', sans-serif;
+      margin-top: 0.5rem;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .custom-table-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+      margin-top: 2rem;
+    }
+    .table {
+      color: var(--text-main);
+      margin-bottom: 0;
+    }
+    .table thead th {
+      border-bottom: 2px solid #cbd5e1;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .table td {
+      vertical-align: middle;
+    }
+    .badge-cluster {
+      display: inline-block;
+      padding: 0.4em 0.8em;
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 2rem;
+    }
+    .badge-cluster-0 { background-color: #66c2a5; }
+    .badge-cluster-1 { background-color: #fc8d62; }
+    .badge-cluster-2 { background-color: #8da0cb; }
+    .badge-cluster-3 { background-color: #e78ac3; }
+    .badge-cluster-4 { background-color: #a6d854; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Customer Segmentation Dashboard</h1>
+    <p>Unsupervised Machine Learning & Customer Insights Platform</p>
+  </div>
+
+  <!-- Navigation -->
+  <ul class="nav nav-tabs justify-content-center" role="tablist">
+    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#general">Overview</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#clusters">3D Clusters</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#income">Income & Spending</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#demographics">Demographics</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#radar">Model Evaluation</a></li>
+  </ul>
+
+  <!-- Tab content -->
+  <div class="tab-content mt-5 container">
+
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="general" role="tabpanel">
+      <!-- Metric Cards Row -->
+      <div class="row text-center">
+        <div class="col-md-3 mb-4">
+          <div class="metric-card">
+            <div class="metric-label">Total Customers</div>
+            <div class="metric-value">{{ total_customers }}</div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="metric-card">
+            <div class="metric-label">Average Age</div>
+            <div class="metric-value">{{ avg_age }} <span style="font-size: 1rem; font-weight: 500; color: var(--text-muted);">yrs</span></div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="metric-card">
+            <div class="metric-label">Average Income</div>
+            <div class="metric-value">${{ avg_income }}<span style="font-size: 1.2rem; font-weight: 500; color: var(--text-muted);">k</span></div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="metric-card">
+            <div class="metric-label">Avg Spending Score</div>
+            <div class="metric-value">{{ avg_spending }}<span style="font-size: 1.2rem; font-weight: 500; color: var(--text-muted);">/100</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segment Profiles Grid -->
+      <div class="custom-table-container">
+        <h3 class="mb-4">Segment Profiles (Average Metrics)</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Cluster ID</th>
+                <th>Avg Age</th>
+                <th>Avg Annual Income</th>
+                <th>Avg Spending Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cluster, profile in profiles.items() %}
+              <tr>
+                <td>
+                  <span class="badge-cluster badge-cluster-{{ cluster }}">C{{ cluster + 1 }}</span>
+                </td>
+                <td>{{ profile['Age'] }} yrs</td>
+                <td>${{ profile['Annual Income (k$)'] }}k</td>
+                <td>{{ profile['Spending Score (1-100)'] }} / 100</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Customer Samples -->
+      <div class="custom-table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+          <h3>Sample Customers Database</h3>
+          <a href="/download_profiles" class="btn btn-primary" style="background: var(--primary); border: none; border-radius: 8px; font-weight: 600; padding: 0.6rem 1.2rem;">
+            Export Segment Profiles (CSV)
+          </a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Customer ID</th>
+                <th>Assigned Segment</th>
+                <th>Annual Income</th>
+                <th>Spending Score</th>
+                <th>Clustering Distance Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cust in customers %}
+              <tr>
+                <td>#{{ cust['CustomerID'] }}</td>
+                <td>
+                  <span class="badge-cluster badge-cluster-{{ cust['Cluster'] }}">C{{ cust['Cluster'] + 1 }}</span>
+                </td>
+                <td>${{ cust['Annual Income (k$)'] }}k</td>
+                <td>{{ cust['Spending Score (1-100)'] }} / 100</td>
+                <td><code>{{ cust['DistanceScore'] }}</code></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Clusters Tab -->
+    <div class="tab-pane fade" id="clusters" role="tabpanel">
+      <div class="custom-table-container">
+        <h3 class="mb-4">Interactive 3D Customer Segmentation Space</h3>
+        <p class="text-muted mb-4">Rotate, zoom, and hover over the data points in this 3D representation of the customer space. The segments are defined along the Age, Annual Income, and Spending Score dimensions.</p>
+        <iframe src="{{ url_for('static', filename='3d_clusters.html') }}" width="100%" height="650" style="border:none; border-radius: 12px; background: white;"></iframe>
+      </div>
+    </div>
+
+    <!-- Income & Spending Tab -->
+    <div class="tab-pane fade" id="income" role="tabpanel">
+      <div class="row">
+        <div class="col-12 mb-4">
+          <div class="custom-table-container">
+            <h3 class="mb-3">Income vs. Spending Score</h3>
+            <iframe src="{{ url_for('static', filename='income_spending.html') }}" width="100%" height="600" style="border:none; border-radius: 12px; background: white;"></iframe>
+          </div>
+        </div>
+        <div class="col-12 mb-4">
+          <div class="custom-table-container">
+            <h3 class="mb-3">Segment Feature Distributions</h3>
+            <iframe src="{{ url_for('static', filename='box_plots.html') }}" width="100%" height="600" style="border:none; border-radius: 12px; background: white;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demographics Tab -->
+    <div class="tab-pane fade" id="demographics" role="tabpanel">
+      <div class="row">
+        <div class="col-12 mb-4">
+          <div class="custom-table-container">
+            <h3 class="mb-3">Age vs. Spending Score</h3>
+            <iframe src="{{ url_for('static', filename='age_spending.html') }}" width="100%" height="600" style="border:none; border-radius: 12px; background: white;"></iframe>
+          </div>
+        </div>
+        <div class="col-12 mb-4">
+          <div class="custom-table-container">
+            <h3 class="mb-3">Gender Representation per Segment</h3>
+            <iframe src="{{ url_for('static', filename='gender_distribution.html') }}" width="100%" height="600" style="border:none; border-radius: 12px; background: white;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Evaluation Tab -->
+    <div class="tab-pane fade" id="radar" role="tabpanel">
+      <div class="row">
+        <div class="col-12 mb-4">
+          <div class="custom-table-container">
+            <h3 class="mb-3">Clustering Algorithm Evaluation Matrix</h3>
+            <iframe src="{{ url_for('static', filename='radar_chart.html') }}" width="100%" height="600" style="border:none; border-radius: 12px; background: white;"></iframe>
+          </div>
+        </div>
+        <div class="col-12 mb-4">
+          <div class="custom-table-container d-flex flex-column justify-content-center">
+            <h3 class="mb-3">Model Analysis</h3>
+            <p class="text-muted">This chart compares three common clustering approaches across three critical axes:</p>
+            <ul class="text-muted pl-4">
+              <li class="mb-2"><strong>Silhouette Score</strong>: Measures how well-defined and separated the clusters are (higher is better).</li>
+              <li class="mb-2"><strong>Scalability</strong>: Performance and memory efficiency when dealing with larger datasets.</li>
+              <li class="mb-2"><strong>Interpretability</strong>: How easily a human can explain or act upon the resulting segments.</li>
+            </ul>
+            <div class="alert alert-info mt-3" role="alert" style="border-radius: 8px;">
+              <strong>KMeans</strong> is selected as the production model due to its high silhouette score and excellent interpretability.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

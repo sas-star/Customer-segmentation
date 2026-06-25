@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFlow // AI Food Supply Chain Predictor</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Local Styling -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="glass-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-chart-line logo-icon"></i>
+                <div class="logo-text">
+                    <h1>EcoFlow</h1>
+                    <span>DATASET BATCH PREDICTION PIPELINE</span>
+                </div>
+            </div>
+            <div class="status-panel">
+                <div class="status-indicator">
+                    <span class="status-dot active"></span>
+                    <span id="connection-status">Predictions Evaluated: 800 Datapoints</span>
+                </div>
+                <div class="time-badge">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Batch Model: Q-Learning</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Row -->
+        <section class="kpi-row">
+            <div class="kpi-card card">
+                <div class="kpi-icon green-glow"><i class="fa-solid fa-wallet"></i></div>
+                <div class="kpi-info">
+                    <label>Q-Learning Net Profit</label>
+                    <h3 id="kpi-q-profit">$0.00</h3>
+                    <span id="kpi-profit-lift" class="green-text">+0.0% lift vs. Baseline</span>
+                </div>
+            </div>
+            <div class="kpi-card card">
+                <div class="kpi-icon red-glow"><i class="fa-solid fa-trash-can"></i></div>
+                <div class="kpi-info">
+                    <label>Food Waste Prevented</label>
+                    <h3 id="kpi-waste-saved">0.0 units</h3>
+                    <span id="kpi-waste-reduction" class="green-text">-0.0% less waste</span>
+                </div>
+            </div>
+            <div class="kpi-card card">
+                <div class="kpi-icon blue-glow"><i class="fa-solid fa-chart-pie"></i></div>
+                <div class="kpi-info">
+                    <label>Optimal Recommendations</label>
+                    <h3 id="kpi-recs">800 Fired</h3>
+                    <span class="text-secondary">Across 10 Categories</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Panel: Interactive SVG Simulation & Heatmap -->
+            <div class="left-column">
+                <!-- SVG Interactive Simulator Topology -->
+                <section class="card simulator-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive Policy Flow Simulator</h2>
+                        <span class="badge">Predictive Simulation</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="description-text">Select states below to simulate product flow, inventory, and agent actions on supply chain nodes.</p>
+                        
+                        <!-- Simulator Controls -->
+                        <div class="simulator-controls">
+                            <div class="control-group">
+                                <label for="sim-category">Category</label>
+                                <select id="sim-category">
+                                    <option value="cattle">Cattle</option>
+                                    <option value="chickens">Chickens</option>
+                                    <option value="goats">Goats</option>
+                                    <option value="pigs">Pigs</option>
+                                    <option value="sheep">Sheep</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="sim-supply">Supply (Stock)</label>
+                                <select id="sim-supply">
+                                    <option value="Low">Low</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="sim-demand">Market Demand</label>
+                                <select id="sim-demand">
+                                    <option value="Low">Low</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- SVG Network visualizer -->
+                        <div class="network-body">
+                            <svg id="network-svg" viewBox="0 0 1000 280">
+                                <defs>
+                                    <linearGradient id="flow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="var(--accent-glow)" stop-opacity="0.3"/>
+                                        <stop offset="50%" stop-color="var(--accent-glow)" stop-opacity="0.8"/>
+                                        <stop offset="100%" stop-color="var(--accent-glow)" stop-opacity="0.3"/>
+                                    </linearGradient>
+                                    <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="6" result="blur"/>
+                                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                                    </filter>
+                                    <filter id="glow-yellow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="6" result="blur"/>
+                                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                                    </filter>
+                                    <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="6" result="blur"/>
+                                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                                    </filter>
+                                </defs>
+                                
+                                <path id="link-1" class="flow-line" d="M 125,120 L 375,120" />
+                                <path id="link-2" class="flow-line" d="M 375,120 L 625,120" />
+                                <path id="link-3" class="flow-line" d="M 625,120 L 875,120" />
+                                
+                                <g id="node-Producer" class="node-group">
+                                    <circle class="node-glow" cx="125" cy="120" r="50" fill="rgba(16, 185, 129, 0.1)"/>
+                                    <circle class="node-core" cx="125" cy="120" r="40" />
+                                    <text class="node-name" x="125" y="115">PRODUCER</text>
+                                    <text class="node-action" x="125" y="132">Standard</text>
+                                    <text class="node-info" x="125" y="148">Stock: Medium</text>
+                                </g>
+
+                                <g id="node-Warehouse" class="node-group">
+                                    <circle class="node-glow" cx="375" cy="120" r="50" fill="rgba(16, 185, 129, 0.1)"/>
+                                    <circle class="node-core" cx="375" cy="120" r="40" />
+                                    <text class="node-name" x="375" y="115">WAREHOUSE</text>
+                                    <text class="node-action" x="375" y="132">Standard</text>
+                                    <text class="node-info" x="375" y="148">Stock: Medium</text>
+                                </g>
+
+                                <g id="node-Distributor" class="node-group">
+                                    <circle class="node-glow" cx="625" cy="120" r="50" fill="rgba(16, 185, 129, 0.1)"/>
+                                    <circle class="node-core" cx="625" cy="120" r="40" />
+                                    <text class="node-name" x="625" y="115">DISTRIBUTOR</text>
+                                    <text class="node-action" x="625" y="132">Standard</text>
+                                    <text class="node-info" x="625" y="148">Stock: Medium</text>
+                                </g>
+
+                                <g id="node-Retailer" class="node-group">
+                                    <circle class="node-glow" cx="875" cy="120" r="50" fill="rgba(16, 185, 129, 0.1)"/>
+                                    <circle class="node-core" cx="875" cy="120" r="40" />
+                                    <text class="node-name" x="875" y="115">RETAILER</text>
+                                    <text class="node-action" x="875" y="132">Standard</text>
+                                    <text class="node-info" x="875" y="148">Stock: Medium</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interactive Q-Table Heatmap -->
+                <section class="card heatmap-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-table-cells"></i> Action Space Heatmap (Q-Table Strategy)</h2>
+                        <span class="badge secondary">Syncs to Simulator</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="description-text">Optimal policies from Q-learning mapping Supply vs Demand states. Click cells to feed state into flow simulator above.</p>
+                        
+                        <div class="heatmap-grid-container">
+                            <div class="heatmap-axis-label y-axis">SUPPLY STATE (STOCK)</div>
+                            <div class="heatmap-grid-wrapper">
+                                <div class="heatmap-grid" id="q-table-heatmap">
+                                    <!-- Generated by JS -->
+                                </div>
+                                <div class="heatmap-axis-label x-axis">MARKET DEMAND STATE</div>
+                            </div>
+                        </div>
+                        
+                        <div class="heatmap-legend">
+                            <div class="legend-item"><span class="legend-color action-0"></span> Standard</div>
+                            <div class="legend-item"><span class="legend-color action-1"></span> Discount (-15%)</div>
+                            <div class="legend-item"><span class="legend-color action-2"></span> Refrigerate</div>
+                            <div class="legend-item"><span class="legend-color action-3"></span> Repurpose</div>
+                        </div>
+                        
+                        <div class="heatmap-tooltip" id="heatmap-explanation">
+                            Hover or click a cell to explore predicted policy actions.
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Panel: Analytics & Graph Suite (More Graphs) -->
+            <div class="right-column">
+                <!-- Row 1: Profits Comparison Line Chart -->
+                <section class="card chart-card-right">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-line"></i> Profit Growth Prediction (Q-Learning vs. Baseline)</h2>
+                    </div>
+                    <div class="card-body chart-body-single">
+                        <div class="chart-container">
+                            <canvas id="profitComparisonChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Row 2: Supply vs Demand Alignment Chart -->
+                <section class="card chart-card-right">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-bezier-curve"></i> Supply vs. Demand Alignment</h2>
+                    </div>
+                    <div class="card-body chart-body-single">
+                        <div class="chart-container">
+                            <canvas id="supplyDemandChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Row 3: Action Distribution & Spoilage side by side -->
+                <div class="chart-row-split">
+                    <section class="card split-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-pie-chart"></i> Action Profile</h2>
+                        </div>
+                        <div class="card-body chart-body-single">
+                            <div class="chart-container-split">
+                                <canvas id="actionDistChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="card split-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-dumpster"></i> Spoilage by Category</h2>
+                        </div>
+                        <div class="card-body chart-body-single">
+                            <div class="chart-container-split">
+                                <canvas id="categoryWasteChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>EcoFlow Analytics Console — Evaluating Q-learning Optimization Predictions on Dataset.</p>
+        </footer>
+    </div>
+    
+    <script src="dashboard.js"></script>
+</body>
+</html>
