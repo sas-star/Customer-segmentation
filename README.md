@@ -17,12 +17,6 @@ and dynamically refine marketing strategies using Q-Learning.
 
 ---
 
-## 🌐 Live Demo
-🎥 [Watch Demo Video](your-youtube-link-here)
-🔗 [LinkedIn](your-linkedin-url-here)
-
----
-
 ## 🛠️ Tech Stack
 
 | Layer | Tools Used |
@@ -137,7 +131,9 @@ http://localhost:5000
 
 ---
 
+## 🌐 Live Demo
+🎥 [Watch Demo Video] https://youtu.be/Hb3y8CDRgXk
+
+---
 ## 👩‍💻 About Me
-3rd year BE CSE student at Sathyabama University,
-passionate about Data Science, Data Analytics & ML.
-Open to internship opportunities!
+Sasmita.S Ai engineer 🔗 [LinkedIn] www.linkedin.com/in/sasmitasenthil
